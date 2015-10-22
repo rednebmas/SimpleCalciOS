@@ -11,11 +11,16 @@ import UIKit
 let darkGrayBG = UIColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
 class ViewController: UIViewController {
+    /*************/
+    /* Variables */
+    /*************/
+    
     @IBOutlet var label: UILabel!
     @IBOutlet var functionLabel: UILabel!
     
     var mathFunctionToApply: ((Double) -> (Double))?
     var result : Double = 0.0
+    var averageCount : Double = 0.0
     var clearInputOnNextNumber : Bool = false
     
     var countingState : CountingState = CountingState.NotCounting
@@ -24,6 +29,10 @@ class ViewController: UIViewController {
         case First
         case Counting
     }
+    
+    /*****************************/
+    /* View controller lifecycle */
+    /*****************************/
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,17 +52,14 @@ class ViewController: UIViewController {
         return UIStatusBarStyle.LightContent
     }
     
-    /***********/
-    /* Actions */
-    /***********/
+    /*********/
+    /* Logic */
+    /*********/
      
-    @IBAction func buttonTouchUp(sender: UIButton) {
-        print(sender.titleLabel?.text)
-        if (sender.titleLabel!.text == nil) {
-            return
-        }
-        
-        switch sender.titleLabel!.text! {
+    @IBAction func buttonTouchUp(sender: UIButton)
+    {
+        switch sender.titleLabel!.text!
+        {
             case ".":
                 self.addToLabel(".")
             case "0":
@@ -92,7 +98,8 @@ class ViewController: UIViewController {
                 self.setMathFunc(fact)
                 self.applyMathFunction(nil)
             case "count":
-                if countingState == CountingState.NotCounting {
+                if countingState == CountingState.NotCounting
+                {
                     countingState = CountingState.First
                 }
                 
@@ -164,29 +171,35 @@ class ViewController: UIViewController {
         }
         
         // = operator
-        if mathFunc == nil {
+        if mathFunc == nil
+        {
             result = mathFunctionToApply!(currentValue!)
             self.label!.text = result.description
             mathFunctionToApply = nil
             return
         }
         
-        if mathFunctionToApply != nil {
+        if mathFunctionToApply != nil
+        {
             result = mathFunctionToApply!(currentValue!)
             self.label!.text = result.description
-        } else if countingState == CountingState.First {
+        }
+        else if countingState == CountingState.First
+        {
             result = 1.0
             countingState = CountingState.Counting
-        } else {
+        }
+        else
+        {
             result = currentValue!
         }
 
         mathFunctionToApply = mathFunc
     }
     
-    /*********/
+    /********/
     /* Math */
-    /*********/
+    /********/
     
     func count(num : Double) -> Double
     {
@@ -216,7 +229,8 @@ class ViewController: UIViewController {
     func divide(num : Double) -> Double
     {
         // divide by zero
-        if num == 0 {
+        if num == 0
+        {
             print("Divide by zero attempted, returning zero")
             return 0
         }
@@ -237,8 +251,6 @@ class ViewController: UIViewController {
     
     func factRecursive(number:Double) -> Double
     {
-        
-        
         // remember:  0! = 1
         if number < 2
         {
