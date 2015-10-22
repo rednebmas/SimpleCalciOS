@@ -30,6 +30,13 @@ class ViewController: UIViewController {
         case Counting
     }
     
+    var averageState = AverageFunctionState.NotAveraging
+    enum AverageFunctionState {
+        case NotAveraging
+        case First
+        case Averaging
+    }
+    
     /*****************************/
     /* View controller lifecycle */
     /*****************************/
@@ -40,7 +47,6 @@ class ViewController: UIViewController {
         self.view.backgroundColor = darkGrayBG
         self.label!.text = ""
         self.functionLabel.text = ""
-        self.countingState = CountingState.NotCounting
     }
     
     override func didReceiveMemoryWarning() {
@@ -105,6 +111,15 @@ class ViewController: UIViewController {
                 
                 self.setFunctionLabelText("count")
                 self.setMathFunc(count)
+            case "avg":
+                if averageState == AverageFunctionState.NotAveraging
+                {
+                    averageState = AverageFunctionState.First
+                    averageCount = 1.0
+                }
+                
+                self.setFunctionLabelText("avg")
+                self.setMathFunc(avg)
             case "=":
                 self.setFunctionLabelText("=")
                 self.applyMathFunction(nil)
@@ -115,6 +130,7 @@ class ViewController: UIViewController {
                 self.result = 0
                 self.clearInputOnNextNumber = false
                 self.countingState = CountingState.NotCounting
+                self.averageState = AverageFunctionState.NotAveraging
                 return
             default:
                 return
@@ -260,14 +276,11 @@ class ViewController: UIViewController {
         return number * factRecursive(number - 1)
     }
     
-    func average(numbers:[Double]) -> Double
+    func avg(number: Double) -> Double
     {
-        var sum = 0.0
-        for number in numbers
-        {
-            sum += number
-        }
-        return sum / Double(numbers.count)
+        let average = ((result * averageCount) + number) / (averageCount + 1)
+        averageCount += 1
+        return average
     }
 }
 
