@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     var mathFunctionToApply: ((Double) -> (Double))?
     var result : Double = 0.0
     var lastNum : Double = 0.0
+    var clearInputOnNextNumber : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,6 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
     }
@@ -38,6 +38,10 @@ class ViewController: UIViewController {
     /***********/
      
     @IBAction func buttonTouchUp(sender: UIButton) {
+        print(sender.titleLabel?.text)
+        if (sender.titleLabel!.text == nil) {
+            return
+        }
         
         switch sender.titleLabel!.text! {
             case ".":
@@ -63,16 +67,19 @@ class ViewController: UIViewController {
             case "9":
                 self.addToLabel("9")
             case "+":
-                mathFunctionToApply = add
-                result = self.stringToDouble(self.label!.text!)!
+                self.setMathFunc(add)
+            case "-":
+                self.setMathFunc(subtract)
+            case "*":
+                self.setMathFunc(multiply)
+            case "÷":
+                self.setMathFunc(divide)
             case "=":
-                if mathFunctionToApply == nil {
-                    return
-                }
-                let stringValue : String = (self.label?.text)!
-                let currentValue = self.stringToDouble(stringValue)
-                result = mathFunctionToApply!(currentValue!)
-                self.label!.text = result.description
+                self.applyMathFunction()
+            case "clear":
+                self.label!.text = nil
+                self.mathFunctionToApply = nil
+                return
             default:
                 return
         }
@@ -80,6 +87,12 @@ class ViewController: UIViewController {
     
     func addToLabel(var string: String)
     {
+        if (clearInputOnNextNumber)
+        {
+            label.text = nil
+            clearInputOnNextNumber = false
+        }
+        
         if label!.text == nil || label!.text == ""
         {
             if string == "." {
@@ -94,6 +107,26 @@ class ViewController: UIViewController {
         }
     }
     
+    func setMathFunc(mathFunc : (Double) -> Double)
+    {
+        applyMathFunction()
+        mathFunctionToApply = mathFunc
+        result = self.stringToDouble(self.label!.text!)!
+        clearInputOnNextNumber = true
+    }
+    
+    func applyMathFunction()
+    {
+        if mathFunctionToApply == nil {
+            return
+        }
+        let stringValue : String = (self.label?.text)!
+        let currentValue = self.stringToDouble(stringValue)
+        result = mathFunctionToApply!(currentValue!)
+        self.label!.text = result.description
+        mathFunctionToApply = nil
+    }
+    
     /********/
      // Math
     /********/
@@ -106,6 +139,26 @@ class ViewController: UIViewController {
     func add(num : Double) -> Double
     {
         return result + num
+    }
+    
+    func subtract(num : Double) -> Double
+    {
+        return result - num
+    }
+    
+    func multiply(num : Double) -> Double
+    {
+        return result * num
+    }
+    
+    func divide(num : Double) -> Double
+    {
+        // divide by zero
+        if num == 0 {
+            return 0
+        }
+        
+        return result / num
     }
     
     func fact(number:Double)
