@@ -21,10 +21,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CGo-uL-R62">
-                                        <rect key="frame" x="15" y="29" width="570" height="62"/>
+                                        <rect key="frame" x="15" y="29" width="570" height="62.5"/>
                                         <animations/>
                                         <color key="backgroundColor" red="0.21176470589999999" green="0.21176470589999999" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="52"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="function" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OQz-b7-l95">
+                                        <rect key="frame" x="8" y="91.5" width="63" height="20.5"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -35,6 +42,8 @@
                                     <constraint firstItem="CGo-uL-R62" firstAttribute="centerY" secondItem="TGl-Rk-Mep" secondAttribute="centerY" id="3m0-io-f3a"/>
                                     <constraint firstItem="CGo-uL-R62" firstAttribute="leading" secondItem="TGl-Rk-Mep" secondAttribute="leading" constant="15" id="8yo-j6-fFR"/>
                                     <constraint firstAttribute="trailing" secondItem="CGo-uL-R62" secondAttribute="trailing" constant="15" id="HR8-0l-m9s"/>
+                                    <constraint firstAttribute="bottom" secondItem="OQz-b7-l95" secondAttribute="bottom" constant="8" id="dTa-ct-17v"/>
+                                    <constraint firstItem="OQz-b7-l95" firstAttribute="leading" secondItem="TGl-Rk-Mep" secondAttribute="leading" constant="8" id="i7W-hb-QmU"/>
                                     <constraint firstAttribute="height" constant="120" id="x7l-9m-c4a"/>
                                 </constraints>
                             </view>
@@ -137,7 +146,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="POv-5r-cnC">
                                 <rect key="frame" x="300" y="505" width="149.5" height="95"/>
                                 <animations/>
-                                <color key="backgroundColor" red="0.12550611793994904" green="0.52815663814544678" blue="0.21924787759780884" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.1691688746213913" green="0.74471461772918701" blue="0.30123984813690186" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
                                 <state key="normal" title="=">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -390,6 +399,7 @@
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
+                        <outlet property="functionLabel" destination="OQz-b7-l95" id="l7l-2u-Xg3"/>
                         <outlet property="label" destination="CGo-uL-R62" id="ttK-dr-3us"/>
                     </connections>
                 </viewController>

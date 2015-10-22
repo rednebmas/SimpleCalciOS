@@ -12,16 +12,26 @@ let darkGrayBG = UIColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
 class ViewController: UIViewController {
     @IBOutlet var label: UILabel!
+    @IBOutlet var functionLabel: UILabel!
+    
     var mathFunctionToApply: ((Double) -> (Double))?
     var result : Double = 0.0
-    var lastNum : Double = 0.0
     var clearInputOnNextNumber : Bool = false
+    
+    var countingState : CountingState = CountingState.NotCounting
+    enum CountingState {
+        case NotCounting
+        case First
+        case Counting
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = darkGrayBG
         self.label!.text = ""
+        self.functionLabel.text = ""
+        self.countingState = CountingState.NotCounting
     }
     
     override func didReceiveMemoryWarning() {
@@ -67,18 +77,37 @@ class ViewController: UIViewController {
             case "9":
                 self.addToLabel("9")
             case "+":
+                self.setFunctionLabelText("+")
                 self.setMathFunc(add)
             case "-":
+                self.setFunctionLabelText("-")
                 self.setMathFunc(subtract)
             case "*":
+                self.setFunctionLabelText("*")
                 self.setMathFunc(multiply)
             case "÷":
+                self.setFunctionLabelText("÷")
                 self.setMathFunc(divide)
+            case "fact":
+                self.setMathFunc(fact)
+                self.applyMathFunction(nil)
+            case "count":
+                if countingState == CountingState.NotCounting {
+                    countingState = CountingState.First
+                }
+                
+                self.setFunctionLabelText("count")
+                self.setMathFunc(count)
             case "=":
-                self.applyMathFunction()
+                self.setFunctionLabelText("=")
+                self.applyMathFunction(nil)
             case "clear":
                 self.label!.text = nil
+                self.functionLabel!.text = nil
                 self.mathFunctionToApply = nil
+                self.result = 0
+                self.clearInputOnNextNumber = false
+                self.countingState = CountingState.NotCounting
                 return
             default:
                 return
@@ -92,6 +121,8 @@ class ViewController: UIViewController {
             label.text = nil
             clearInputOnNextNumber = false
         }
+        
+        self.setFunctionLabelText("")
         
         if label!.text == nil || label!.text == ""
         {
@@ -107,29 +138,60 @@ class ViewController: UIViewController {
         }
     }
     
+    func setFunctionLabelText(string : String)
+    {
+        functionLabel.text = string
+    }
+    
     func setMathFunc(mathFunc : (Double) -> Double)
     {
-        applyMathFunction()
-        mathFunctionToApply = mathFunc
-        result = self.stringToDouble(self.label!.text!)!
+        // this is needed if we pressed equals, then a math function
+        applyMathFunction(mathFunc)
+        
+        // result = self.stringToDouble(self.label!.text!)!
         clearInputOnNextNumber = true
     }
     
-    func applyMathFunction()
+    // pass nil for equals operator
+    func applyMathFunction(mathFunc : ((Double) -> Double)?)
     {
-        if mathFunctionToApply == nil {
-            return
-        }
+        // get the value
         let stringValue : String = (self.label?.text)!
         let currentValue = self.stringToDouble(stringValue)
-        result = mathFunctionToApply!(currentValue!)
-        self.label!.text = result.description
-        mathFunctionToApply = nil
+        if (currentValue == nil)
+        {
+            return
+        }
+        
+        // = operator
+        if mathFunc == nil {
+            result = mathFunctionToApply!(currentValue!)
+            self.label!.text = result.description
+            mathFunctionToApply = nil
+            return
+        }
+        
+        if mathFunctionToApply != nil {
+            result = mathFunctionToApply!(currentValue!)
+            self.label!.text = result.description
+        } else if countingState == CountingState.First {
+            result = 1.0
+            countingState = CountingState.Counting
+        } else {
+            result = currentValue!
+        }
+
+        mathFunctionToApply = mathFunc
     }
     
-    /********/
-     // Math
-    /********/
+    /*********/
+    /* Math */
+    /*********/
+    
+    func count(num : Double) -> Double
+    {
+        return result + 1
+    }
     
     func stringToDouble(incoming:String) -> Double?
     {
@@ -155,22 +217,22 @@ class ViewController: UIViewController {
     {
         // divide by zero
         if num == 0 {
+            print("Divide by zero attempted, returning zero")
             return 0
         }
         
         return result / num
     }
     
-    func fact(number:Double)
+    func fact(number:Double) -> Double
     {
         if number < 0 || floor(number) != number
         {
-            print("Factorial is not defined for non-natural numbers")
-            return
+            print("Factorial is not defined for non-natural numbers, returning zero")
+            return 0
         }
         
-        let result = factRecursive(number)
-        print("= \(result)")
+        return factRecursive(number)
     }
     
     func factRecursive(number:Double) -> Double
