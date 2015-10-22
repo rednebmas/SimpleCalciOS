@@ -168,6 +168,11 @@ class ViewController: UIViewController {
     
     func setMathFunc(mathFunc : (Double) -> Double)
     {
+        if self.label.text == nil || self.label.text == ""
+        {
+            return
+        }
+        
         // this is needed if we pressed equals, then a math function
         applyMathFunction(mathFunc)
         
