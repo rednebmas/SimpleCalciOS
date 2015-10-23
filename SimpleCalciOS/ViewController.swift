@@ -194,6 +194,10 @@ class ViewController: UIViewController {
         // = operator
         if mathFunc == nil
         {
+            if mathFunctionToApply == nil {
+                return
+            }
+            
             result = mathFunctionToApply!(currentValue!)
             self.label!.text = result.description
             mathFunctionToApply = nil
